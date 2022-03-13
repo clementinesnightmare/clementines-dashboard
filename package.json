@@ -1,0 +1,35 @@
+{
+  "name": "clementines-dashboard",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "dependencies": {
+    "bignumber.js": "^9.0.1",
+    "bn.js": "^5.2.0",
+    "buffer": "^6.0.3",
+    "decimal.js": "^10.3.1",
+    "lodash": "^4.17.21",
+    "qrcode.vue": "^3.3.2",
+    "set-interval-async": "^2.0.3",
+    "vue": "^3.2.6",
+    "vue-router": "^4.0.11",
+    "web3": "^1.5.2"
+  },
+  "devDependencies": {
+    "@types/web3": "^1.2.2",
+    "@vitejs/plugin-vue": "^1.6.1",
+    "@vue/compiler-sfc": "^3.2.6",
+    "autoprefixer": "^10.3.4",
+    "postcss": "^8.3.6",
+    "tailwindcss": "^2.2.15",
+    "vite": "^2.5.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/clementinesnightmare/clementines-dashboard"
+  }
+}
