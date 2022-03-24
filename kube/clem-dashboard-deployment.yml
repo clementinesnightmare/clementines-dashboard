@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: default
+  labels:
+    service: clem-dashboard
+  name: clem-dashboard
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      service: clem-dashboard
+  template:
+    metadata:
+      labels:
+        service: clem-dashboard
+    spec:
+      containers:
+      - image: zquestz/clem-dashboard:latest
+        imagePullPolicy: Always
+        name: clem-dashboard
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "8Mi"
+      restartPolicy: Always
