@@ -79,7 +79,7 @@ function App() {
           `Welcome to the Neighborhood ` + blockchain.account + `!`
         );
         setWalletData(
-          receipt.length > 0 ? prepWalletData(["47"]) : <p>You have no Clementine's Nightmare NFTs in this wallet.</p>
+          receipt.length > 0 ? prepWalletData(receipt) : <p>You have no Clementine's Nightmare NFTs in this wallet.</p>
         );
       });
   };
