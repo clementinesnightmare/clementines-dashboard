@@ -56,6 +56,9 @@ function App() {
     MARKETPLACE: "",
     MARKETPLACE_LINK: "",
     SHOW_BACKGROUND: false,
+    ULTRA_LEGENDS: [],
+    LEGENDS: [],
+    RARES: [],
     METADATA: [],
   });
   const [walletData, setWalletData] = useState([]);
@@ -84,13 +87,14 @@ function App() {
     let fullData = []
 
     for (let i = 0; i < receipt.length; i++) {
-      let idx = parseInt(receipt[i])
+      let idx = parseInt(receipt[i], 10)
       let metadata = CONFIG.METADATA[idx]
 
       fullData.push({
         id: idx,
         url: metadata.image.replace("ipfs://", "https://clementinesnightmare.mypinata.cloud/ipfs/"),
         name: metadata.name,
+        color: nftColor(idx),
       })
     }
 
@@ -116,10 +120,28 @@ function App() {
         )}
         <p style={{
           padding: "5px",
-          color: "var(--primary-text)",
+          color: item.color,
         }}>{item.name}</p>
       </div>
     );
+  }
+
+  const nftColor = (idx) => {
+    let val = "var(--primary-text)"
+
+    if (CONFIG.ULTRA_LEGENDS.includes(idx)) {
+      return "var(--ultra-text)"
+    }
+
+    if (CONFIG.LEGENDS.includes(idx)) {
+      return "var(--legend-text)"
+    }
+
+    if (CONFIG.RARES.includes(idx)) {
+      return "var(--rare-text)"
+    }
+
+    return val
   }
 
   const getData = () => {
