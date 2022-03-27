@@ -68,8 +68,8 @@ export const connect = () => {
     });
 
     const provider = await web3Modal.connect();
-
     const CONFIG = await configResponse.json();
+
     if (provider) {
       Web3EthContract.setProvider(provider);
       let web3 = new Web3(provider);

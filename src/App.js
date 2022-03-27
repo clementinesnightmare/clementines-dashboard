@@ -4,6 +4,7 @@ import { connect } from "./redux/blockchain/blockchainActions";
 import { fetchData } from "./redux/data/dataActions";
 import * as s from "./styles/globalStyles";
 import styled from "styled-components";
+import { useMoralis } from "react-moralis";
 
 export const StyledConnect = styled.button`
   width: 250px;
@@ -88,6 +89,7 @@ function App() {
     METADATA: [],
   });
   const [walletData, setWalletData] = useState([]);
+  const { Moralis, isInitialized, ...rest } = useMoralis();
 
   const loadWallet = () => {
     setCurrentView(`wallet`)
@@ -117,24 +119,82 @@ function App() {
     setFeedback(`Loading vault...`)
     setWalletData(``)
 
-    blockchain.smartContract.methods
-      .walletOfOwner(CONFIG.VAULT_ADDRESS)
-      .call({
-        to: CONFIG.CONTRACT_ADDRESS,
-        from: blockchain.account,
-      })
-      .then((receipt) => {
-        console.log(receipt);
-        setFeedback(
-          `Welcome to the Clementine's Nightmare Community Vault!`
-        );
-        setWalletData(
-          receipt.length > 0 ? prepWalletData(receipt) : (
-            <p>There are no Clementine's Nightmare NFTs in the vault.</p>
-          )
-        );
-      });
+    const options = { address: CONFIG.VAULT_ADDRESS };
+
+    Moralis.Web3API.account.getNFTs(options).then((receipt) => {
+      console.log(receipt);
+      setFeedback(
+        `Welcome to the Clementine's Nightmare Community Vault!`
+      );
+      setWalletData(
+        receipt.result.length > 0 ? prepVaultData(receipt) : (
+          <p>There are no NFTs in the vault.</p>
+        )
+      );
+    });
   };
+
+
+
+
+  const prepVaultData = (receipt) => {
+    let fullData = []
+
+    for (let i = 0; i < receipt.result.length; i++) {
+      try {
+        let metadata = JSON.parse(receipt.result[i].metadata)
+        let url = ""
+
+        if (metadata.name === "pixelatedink.eth" || metadata.name === "clementinesnightmare.eth") {
+          continue
+        }
+
+        let ipfsReplacement = receipt.result[i].token_address.toLowerCase() === CONFIG.CONTRACT_ADDRESS.toLowerCase() ? "https://clementinesnightmare.mypinata.cloud/ipfs/" : "https://ipfs.io/ipfs/"
+
+        if (metadata.image !== undefined) {
+          url = metadata.image.replace("ipfs://", ipfsReplacement)
+        } else if (metadata.image_url !== undefined) {
+          url = metadata.image_url.replace("ipfs://", ipfsReplacement)
+        } else if (metadata.animation_url !== undefined) {
+          url = metadata.animation_url.replace("ipfs://", ipfsReplacement)
+        }
+
+        fullData.push({
+          id: receipt.result[i].token_id,
+          url: url,
+          name: metadata.name,
+        })
+      } catch (err) {
+        console.log(err)
+      }
+    }
+
+    return fullData.map((item) =>
+      <div key={item.id} style={{
+        margin: "10px",
+        backgroundColor: "var(--primary)",
+        borderRadius: 15,
+      }}>
+        {!item.url.includes(".mp4") ? (
+          <img alt={item.name} src={item.url} width="250px" height="250px" style={{
+            borderTopRightRadius: 15,
+            borderTopLeftRadius: 15,
+          }} />) : (
+          <video width="250" height="250" alt={item.name} style={{
+            borderTopRightRadius: 15,
+            borderTopLeftRadius: 15,
+          }} controls={true}>
+            <source src={item.url} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        )}
+        <p style={{
+          padding: "5px",
+          color: item.color,
+        }}>{item.name}</p>
+      </div>
+    );
+  }
 
   const prepWalletData = (receipt) => {
     let fullData = []
@@ -153,7 +213,6 @@ function App() {
 
     return fullData.map((item) =>
       <div key={item.id} style={{
-        border: "3px solid var(--primary)",
         margin: "10px",
         backgroundColor: "var(--primary)",
         borderRadius: 15,
@@ -166,7 +225,7 @@ function App() {
           <video width="250" height="250" alt={item.name} style={{
             borderTopRightRadius: 15,
             borderTopLeftRadius: 15,
-          }} controls="true">
+          }} controls={true}>
             <source src={item.url} type="video/mp4" />
             Your browser does not support the video tag.
           </video>
