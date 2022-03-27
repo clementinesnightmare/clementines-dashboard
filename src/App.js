@@ -92,7 +92,7 @@ function App() {
   const [vaultData, setVaultData] = useState([]);
   const { Moralis, isInitialized, ...rest } = useMoralis();
 
-  const loadWallet = () => {
+  const loadWallet = async () => {
     setCurrentView(`wallet`)
     setFeedback(`Loading your wallet...`);
     blockchain.smartContract.methods
@@ -102,17 +102,25 @@ function App() {
         from: blockchain.account,
       })
       .then(async (receipt) => {
-        console.log(receipt);
-
-        const ensOptions = { address: CONFIG.VAULT_ADDRESS };
-        const displayName = blockchain.account;
+        const ensOptions = { address: blockchain.account };
         try {
           const resolvedAddress = await Moralis.Web3API.resolve.resolveAddress(ensOptions)
-          displayName = resolvedAddress.name !== null ? resolvedAddress.name : blockchain.account
-        } catch {}
-        setFeedback(
-          `Welcome to the Neighborhood ` + displayName + `!`
-        );
+          if (resolvedAddress.name !== null) {
+            setFeedback(
+              `Welcome to the Neighborhood ` + resolvedAddress.name + `!`
+            );
+          } else {
+            setFeedback(
+              `Welcome to the Neighborhood ` + blockchain.account + `!`
+            );
+          }
+        } catch {
+          // Eat error as the Moralis API has a known bad response.
+          setFeedback(
+            `Welcome to the Neighborhood ` + blockchain.account + `!`
+          );
+        }
+
         setWalletData(
           receipt.length > 0 ? prepWalletData(receipt) : (
             <div>
@@ -136,7 +144,6 @@ function App() {
     const options = { address: CONFIG.VAULT_ADDRESS };
 
     Moralis.Web3API.account.getNFTs(options).then((receipt) => {
-      console.log(receipt);
       setFeedback(
         `Welcome to the Clementine's Nightmare Community Vault!`
       );
