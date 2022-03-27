@@ -211,10 +211,10 @@ function App() {
         <p style={{
           padding: "5px",
           color: item.color,
-        }}>{item.name} <a target="_blank" href={"https://opensea.io/assets/" + item.token_address + "/" + item.token_id}><img style={{
+        }}>{item.name}<a target="_blank" href={"https://opensea.io/assets/" + item.token_address + "/" + item.token_id}><img style={{
           verticalAlign: 'middle',
           height:"16px", width:"16px",
-          marginLeft: "5px",
+          marginLeft: "6px",
         }}
         src="/config/images/opensea-icon.png" /></a></p>
       </div>
@@ -258,7 +258,12 @@ function App() {
         <p style={{
           padding: "5px",
           color: item.color,
-        }}>{item.name}</p>
+        }}>{item.name}<a target="_blank" href={"https://opensea.io/assets/" + CONFIG.CONTRACT_ADDRESS + "/" + item.id}><img style={{
+          verticalAlign: 'middle',
+          height:"16px", width:"16px",
+          marginLeft: "6px",
+        }}
+        src="/config/images/opensea-icon.png" /></a></p>
       </div>
     );
   }
