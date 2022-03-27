@@ -130,7 +130,7 @@ function App() {
               <p style={{
                 margin: "1em"
               }}>Visit the neighborhood on OpenSea!</p>
-              <a href={CONFIG.MARKETPLACE_LINK}><img alt="opensea" src="/config/images/opensea.png" /></a>
+              <a target="_blank" href={CONFIG.MARKETPLACE_LINK}><img alt="opensea" src="/config/images/opensea.png" /></a>
             </div>
           )
         );
@@ -181,6 +181,8 @@ function App() {
           id: i,
           url: url,
           name: metadata.name,
+          token_id: receipt.result[i].token_id,
+          token_address: receipt.result[i].token_address,
         })
       } catch (err) {
         console.log(err)
@@ -209,7 +211,12 @@ function App() {
         <p style={{
           padding: "5px",
           color: item.color,
-        }}>{item.name}</p>
+        }}>{item.name} <a target="_blank" href={"https://opensea.io/assets/" + item.token_address + "/" + item.token_id}><img style={{
+          verticalAlign: 'middle',
+          height:"16px", width:"16px",
+          marginLeft: "10px",
+        }}
+        src="/config/images/opensea-icon.png" /></a></p>
       </div>
     );
   }
