@@ -214,7 +214,7 @@ function App() {
         }}>{item.name} <a target="_blank" href={"https://opensea.io/assets/" + item.token_address + "/" + item.token_id}><img style={{
           verticalAlign: 'middle',
           height:"16px", width:"16px",
-          marginLeft: "10px",
+          marginLeft: "5px",
         }}
         src="/config/images/opensea-icon.png" /></a></p>
       </div>
