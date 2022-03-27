@@ -89,12 +89,12 @@ function App() {
     METADATA: [],
   });
   const [walletData, setWalletData] = useState([]);
+  const [vaultData, setVaultData] = useState([]);
   const { Moralis, isInitialized, ...rest } = useMoralis();
 
   const loadWallet = () => {
     setCurrentView(`wallet`)
     setFeedback(`Loading your wallet...`);
-    setWalletData(``);
     blockchain.smartContract.methods
       .walletOfOwner(blockchain.account)
       .call({
@@ -117,7 +117,6 @@ function App() {
   const loadVault = () => {
     setCurrentView(`vault`)
     setFeedback(`Loading vault...`)
-    setWalletData(``)
 
     const options = { address: CONFIG.VAULT_ADDRESS };
 
@@ -126,16 +125,13 @@ function App() {
       setFeedback(
         `Welcome to the Clementine's Nightmare Community Vault!`
       );
-      setWalletData(
+      setVaultData(
         receipt.result.length > 0 ? prepVaultData(receipt) : (
           <p>There are no NFTs in the vault.</p>
         )
       );
     });
   };
-
-
-
 
   const prepVaultData = (receipt) => {
     let fullData = []
@@ -365,14 +361,23 @@ function App() {
                     {feedback}
                   </s.TextDescription>
                   <s.SpacerSmall />
-                  <s.Container style={{
-                    flexFlow: "row wrap",
-                    maxWidth: "1200px",
-                    textAlign: "center",
-                    color: "var(--accent-text)",
-                  }} ai={"center"} jc={"center"} fd={"row"}>
-                    {walletData}
-                  </s.Container>
+                  {currentView === "wallet" ? (
+                    <s.Container style={{
+                      flexFlow: "row wrap",
+                      maxWidth: "1200px",
+                      textAlign: "center",
+                      color: "var(--accent-text)",
+                    }} ai={"center"} jc={"center"} fd={"row"}>
+                      {walletData}
+                    </s.Container>) : (
+                    <s.Container style={{
+                      flexFlow: "row wrap",
+                      maxWidth: "1200px",
+                      textAlign: "center",
+                      color: "var(--accent-text)",
+                    }} ai={"center"} jc={"center"} fd={"row"}>
+                      {vaultData}
+                    </s.Container>)}
                 </>
               )}
             </>
