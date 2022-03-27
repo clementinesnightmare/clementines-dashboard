@@ -160,7 +160,7 @@ function App() {
         }
 
         fullData.push({
-          id: receipt.result[i].token_id,
+          id: i,
           url: url,
           name: metadata.name,
         })
