@@ -72,7 +72,7 @@ export const connect = () => {
 
     if (provider) {
       Web3EthContract.setProvider(provider);
-      let web3 = new Web3(provider);
+      const web3 = new Web3(provider);
       try {
         const accounts = await web3.eth.getAccounts();
         const networkId = await web3.eth.net.getId();

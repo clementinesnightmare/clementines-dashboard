@@ -101,14 +101,29 @@ function App() {
         to: CONFIG.CONTRACT_ADDRESS,
         from: blockchain.account,
       })
-      .then((receipt) => {
+      .then(async (receipt) => {
         console.log(receipt);
+
+        const ensOptions = { address: CONFIG.VAULT_ADDRESS };
+        const displayName = blockchain.account;
+        try {
+          const resolvedAddress = await Moralis.Web3API.resolve.resolveAddress(ensOptions)
+          displayName = resolvedAddress.name !== null ? resolvedAddress.name : blockchain.account
+        } catch {}
         setFeedback(
-          `Welcome to the Neighborhood ` + blockchain.account + `!`
+          `Welcome to the Neighborhood ` + displayName + `!`
         );
         setWalletData(
           receipt.length > 0 ? prepWalletData(receipt) : (
-            <p>You have no Clementine's Nightmare NFTs in this wallet.</p>
+            <div>
+              <p style={{
+                marginBottom: "1em"
+              }}>You have no Clementine's Nightmare NFTs in this wallet.</p>
+              <p style={{
+                margin: "1em"
+              }}>Visit the neighborhood on OpenSea!</p>
+              <a href={CONFIG.MARKETPLACE_LINK}><img alt="opensea" src="/config/images/opensea.png" /></a>
+            </div>
           )
         );
       });
