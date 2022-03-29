@@ -213,10 +213,10 @@ function App() {
           color: item.color,
         }}>{item.name}<a target="_blank" href={"https://opensea.io/assets/" + item.token_address + "/" + item.token_id}><img style={{
           verticalAlign: 'middle',
-          height:"16px", width:"16px",
+          height: "16px", width: "16px",
           marginLeft: "6px",
         }}
-        src="/config/images/opensea-icon.png" /></a></p>
+          src="/config/images/opensea-icon.png" /></a></p>
       </div>
     );
   }
@@ -260,10 +260,10 @@ function App() {
           color: item.color,
         }}>{item.name}<a target="_blank" href={"https://opensea.io/assets/" + CONFIG.CONTRACT_ADDRESS + "/" + item.id}><img style={{
           verticalAlign: 'middle',
-          height:"16px", width:"16px",
+          height: "16px", width: "16px",
           marginLeft: "6px",
         }}
-        src="/config/images/opensea-icon.png" /></a></p>
+          src="/config/images/opensea-icon.png" /></a></p>
       </div>
     );
   }
@@ -318,7 +318,7 @@ function App() {
         flex={1}
         ai={"center"}
         style={{ padding: 24, backgroundColor: "var(--primary)" }}
-        image={CONFIG.SHOW_BACKGROUND ? "/config/images/bg.png" : null}
+        image={CONFIG.SHOW_BACKGROUND ? "/config/images/background.webp" : null}
       >
         <ResponsiveWrapper flex={1}>
           <s.Container
@@ -326,7 +326,7 @@ function App() {
             jc={"center"}
             ai={"center"}
           >
-            <StyledLogo alt={"logo"} src={"/config/images/logo.png"} />
+            <a href="https://clementinesnightmare.io"><StyledLogo alt={"Clementine's Nightmare Logo"} src={"/config/images/logo.png"} /></a>
             <>
               <s.SpacerSmall />
               {blockchain.account === "" ||
