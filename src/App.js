@@ -71,6 +71,7 @@ function App() {
   const [currentView, setCurrentView] = useState(``)
   const [CONFIG, SET_CONFIG] = useState({
     CONTRACT_ADDRESS: "",
+    CONTRACT_ADDRESS_ECLIPSE: "",
     SCAN_LINK: "",
     NETWORK: {
       NAME: "",
@@ -78,15 +79,21 @@ function App() {
       ID: 0,
     },
     NFT_NAME: "",
+    NFT_NAME_ECLIPSE: "",
     SYMBOL: "",
     MARKETPLACE: "",
     MARKETPLACE_LINK: "",
+    MARKETPLACE_LINK_ECLIPSE: "",
     SHOW_BACKGROUND: false,
     VAULT_ADDRESS: "",
     ULTRA_LEGENDS: [],
+    ULTRA_LEGENDS_ECLIPSE: [],
     LEGENDS: [],
+    LEGENDS_ECLIPSE: [],
     RARES: [],
+    RARES_ECLIPSE: [],
     METADATA: [],
+    METADATA_ECLIPSE: [],
   });
   const [walletData, setWalletData] = useState([]);
   const [vaultData, setVaultData] = useState([]);
@@ -102,38 +109,46 @@ function App() {
         from: blockchain.account,
       })
       .then(async (receipt) => {
-        const ensOptions = { address: blockchain.account };
-        try {
-          const resolvedAddress = await Moralis.Web3API.resolve.resolveAddress(ensOptions)
-          if (resolvedAddress.name !== null) {
-            setFeedback(
-              `Welcome to the Neighborhood ` + resolvedAddress.name + `!`
-            );
-          } else {
-            setFeedback(
-              `Welcome to the Neighborhood ` + blockchain.account + `!`
-            );
-          }
-        } catch {
-          // Eat error as the Moralis API has a known bad response.
-          setFeedback(
-            `Welcome to the Neighborhood ` + blockchain.account + `!`
-          );
-        }
+        blockchain.smartContractEclipse.methods
+          .walletOfOwner(blockchain.account)
+          .call({
+            to: CONFIG.CONTRACT_ADDRESS_ECLIPSE,
+            from: blockchain.account,
+          })
+          .then(async (receiptEclipse) => {
+            const ensOptions = { address: blockchain.account };
+            try {
+              const resolvedAddress = await Moralis.Web3API.resolve.resolveAddress(ensOptions)
+              if (resolvedAddress.name !== null) {
+                setFeedback(
+                  `Welcome to the Neighborhood ` + resolvedAddress.name + `!`
+                );
+              } else {
+                setFeedback(
+                  `Welcome to the Neighborhood ` + blockchain.account + `!`
+                );
+              }
+            } catch {
+              // Eat error as the Moralis API has a known bad response.
+              setFeedback(
+                `Welcome to the Neighborhood ` + blockchain.account + `!`
+              );
+            }
 
-        setWalletData(
-          receipt.length > 0 ? prepWalletData(receipt) : (
-            <div>
-              <p style={{
-                marginBottom: "1em"
-              }}>You have no Clementine's Nightmare NFTs in this wallet.</p>
-              <p style={{
-                margin: "1em"
-              }}>Visit the neighborhood on OpenSea!</p>
-              <a target="_blank" href={CONFIG.MARKETPLACE_LINK}><img alt="opensea" src="/config/images/opensea.png" /></a>
-            </div>
-          )
-        );
+            setWalletData(
+              receipt.length + receiptEclipse.length > 0 ? prepWalletData(receipt, receiptEclipse) : (
+                <div>
+                  <p style={{
+                    marginBottom: "1em"
+                  }}>You have no Clementine's Nightmare NFTs in this wallet.</p>
+                  <p style={{
+                    margin: "1em"
+                  }}>Visit the neighborhood on OpenSea!</p>
+                  <a target="_blank" href={CONFIG.MARKETPLACE_LINK}><img alt="opensea" src="/config/images/opensea.png" /></a>
+                </div>
+              )
+            );
+          });
       });
   };
 
@@ -221,7 +236,7 @@ function App() {
     );
   }
 
-  const prepWalletData = (receipt) => {
+  const prepWalletData = (receipt, receiptEclipse) => {
     let fullData = []
 
     for (let i = 0; i < receipt.length; i++) {
@@ -232,7 +247,21 @@ function App() {
         id: idx,
         url: metadata.image.replace("ipfs://", "https://clementinesnightmare.mypinata.cloud/ipfs/"),
         name: metadata.name,
-        color: nftColor(idx),
+        color: nftColor(idx, false),
+        eclipse: false,
+      })
+    }
+
+    for (let i = 0; i < receiptEclipse.length; i++) {
+      let idx = parseInt(receiptEclipse[i], 10)
+      let metadata = CONFIG.METADATA_ECLIPSE[idx]
+
+      fullData.push({
+        id: idx,
+        url: metadata.image.replace("ipfs://", "https://clementinesnightmare.mypinata.cloud/ipfs/"),
+        name: metadata.name,
+        color: nftColor(idx, true),
+        eclipse: true,
       })
     }
 
@@ -258,7 +287,7 @@ function App() {
         <p style={{
           padding: "5px",
           color: item.color,
-        }}>{item.name}<a target="_blank" href={"https://opensea.io/assets/" + CONFIG.CONTRACT_ADDRESS + "/" + item.id}><img style={{
+        }}>{item.name}<a target="_blank" href={"https://opensea.io/assets/" + (item.eclipse ? CONFIG.CONTRACT_ADDRESS_ECLIPSE : CONFIG.CONTRACT_ADDRESS) + "/" + item.id}><img style={{
           verticalAlign: 'middle',
           height: "16px", width: "16px",
           marginLeft: "6px",
@@ -268,8 +297,24 @@ function App() {
     );
   }
 
-  const nftColor = (idx) => {
+  const nftColor = (idx, eclipse) => {
     let val = "var(--primary-text)"
+
+    if (eclipse) {
+      if (CONFIG.ULTRA_LEGENDS_ECLIPSE.includes(idx)) {
+        return "var(--ultra-text)"
+      }
+  
+      if (CONFIG.LEGENDS_ECLIPSE.includes(idx)) {
+        return "var(--legend-text)"
+      }
+  
+      if (CONFIG.RARES_ECLIPSE.includes(idx)) {
+        return "var(--rare-text)"
+      }
+
+      return val
+    }
 
     if (CONFIG.ULTRA_LEGENDS.includes(idx)) {
       return "var(--ultra-text)"

@@ -60,6 +60,15 @@ export const connect = () => {
       },
     });
     const abi = await abiResponse.json();
+
+    const abiEclipseResponse = await fetch("/config/abiEclipse.json", {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+    const abiEclipse = await abiEclipseResponse.json();
+
     const configResponse = await fetch("/config/config.json", {
       headers: {
         "Content-Type": "application/json",
@@ -81,10 +90,15 @@ export const connect = () => {
             abi,
             CONFIG.CONTRACT_ADDRESS
           );
+          const smartContractEclipseObj = new Web3EthContract(
+            abiEclipse,
+            CONFIG.CONTRACT_ADDRESS_ECLIPSE
+          );
           dispatch(
             connectSuccess({
               account: accounts[0],
               smartContract: SmartContractObj,
+              smartContractEclipse: smartContractEclipseObj,
               web3: web3,
             })
           );
