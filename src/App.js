@@ -178,6 +178,10 @@ function App() {
         let metadata = JSON.parse(receipt.result[i].metadata)
         let url = ""
 
+        if (metadata == null) {
+          continue
+        }
+
         if (metadata.name === "pixelatedink.eth" || metadata.name === "clementinesnightmare.eth") {
           continue
         }
