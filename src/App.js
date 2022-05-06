@@ -179,10 +179,11 @@ function App() {
         let url = ""
 
         if (metadata == null) {
+          console.log("Missing metadata:", receipt.result[i])
           continue
         }
 
-        if (metadata.name === "pixelatedink.eth" || metadata.name === "clementinesnightmare.eth") {
+        if (metadata.name === "pixelatedink.eth" || metadata.name === "clementinesnightmare.eth" || metadata.name === "Spinal Foxes") {
           continue
         }
 
