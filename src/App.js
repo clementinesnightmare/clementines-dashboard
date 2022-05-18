@@ -175,7 +175,11 @@ function App() {
           continue
         }
 
-        let ipfsReplacement = receipt.result[i].token_address.toLowerCase() === CONFIG.CONTRACT_ADDRESS.toLowerCase() ? "https://clementinesnightmare.mypinata.cloud/ipfs/" : "https://ipfs.io/ipfs/"
+        let customIPFS = false
+        if (receipt.result[i].token_address.toLowerCase() === CONFIG.CONTRACT_ADDRESS_ECLIPSE.toLowerCase() || receipt.result[i].token_address.toLowerCase() === CONFIG.CONTRACT_ADDRESS.toLowerCase()) {
+          customIPFS = true
+        }
+        let ipfsReplacement = customIPFS ? "https://clementinesnightmare.mypinata.cloud/ipfs/" : "https://ipfs.io/ipfs/"
 
         if (metadata.image !== undefined) {
           url = metadata.image.replace("ipfs://", ipfsReplacement)
@@ -183,6 +187,10 @@ function App() {
           url = metadata.image_url.replace("ipfs://", ipfsReplacement)
         } else if (metadata.animation_url !== undefined) {
           url = metadata.animation_url.replace("ipfs://", ipfsReplacement)
+        }
+
+        if (url.toLowerCase().endsWith('.png') || url.toLowerCase().endsWith('.jpg')) {
+          url = "https://resizer.greyh.at/250x/" + url
         }
 
         fullData.push({
@@ -236,10 +244,15 @@ function App() {
       let idx = parseInt(receipt.result[i].token_id, 10)
       let isEclipse = receipt.result[i].token_address === "0x17aad3fcf1703ef7908777084ec24e55bc58ae33" ? true : false
       let metadata = isEclipse ? CONFIG.METADATA_ECLIPSE[idx] : CONFIG.METADATA[idx]
+      let url = metadata.image.replace("ipfs://", "https://clementinesnightmare.mypinata.cloud/ipfs/")
+
+      if (url.toLowerCase().endsWith('.png') || url.toLowerCase().endsWith('.jpg')) {
+        url = "https://resizer.greyh.at/250x/" + url
+      }
 
       fullData.push({
         id: idx,
-        url: metadata.image.replace("ipfs://", "https://clementinesnightmare.mypinata.cloud/ipfs/"),
+        url: url,
         name: metadata.name,
         color: nftColor(idx, isEclipse),
         eclipse: isEclipse,
