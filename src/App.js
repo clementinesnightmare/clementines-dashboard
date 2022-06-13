@@ -158,6 +158,10 @@ function App() {
     });
   };
 
+  const truncate = (str, len) => {
+    return str.length > len ? str.substring(0, len-3) + "..." : str;
+  }
+
   const prepVaultData = (receipt) => {
     let fullData = []
 
@@ -212,7 +216,7 @@ function App() {
         borderRadius: 15,
       }}>
         {!item.url.includes(".mp4") ? (
-          <img alt={item.name} src={item.url} width="250px" height="250px" style={{
+          <img alt={item.name} src={item.url} width="250px" style={{
             borderTopRightRadius: 15,
             borderTopLeftRadius: 15,
           }} />) : (
@@ -227,7 +231,7 @@ function App() {
         <p style={{
           padding: "5px",
           color: item.color,
-        }}>{item.name}<a target="_blank" href={"https://opensea.io/assets/" + item.token_address + "/" + item.token_id}><img style={{
+        }}>{truncate(item.name, 25)}<a target="_blank" href={"https://opensea.io/assets/" + item.token_address + "/" + item.token_id}><img style={{
           verticalAlign: 'middle',
           height: "16px", width: "16px",
           marginLeft: "6px",
@@ -281,7 +285,7 @@ function App() {
         <p style={{
           padding: "5px",
           color: item.color,
-        }}>{item.name}<a target="_blank" href={"https://opensea.io/assets/" + (item.eclipse ? CONFIG.CONTRACT_ADDRESS_ECLIPSE : CONFIG.CONTRACT_ADDRESS) + "/" + item.id}><img style={{
+        }}>{truncate(item.name, 25)}<a target="_blank" href={"https://opensea.io/assets/" + (item.eclipse ? CONFIG.CONTRACT_ADDRESS_ECLIPSE : CONFIG.CONTRACT_ADDRESS) + "/" + item.id}><img style={{
           verticalAlign: 'middle',
           height: "16px", width: "16px",
           marginLeft: "6px",
