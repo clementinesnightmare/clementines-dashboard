@@ -194,7 +194,7 @@ function App() {
         }
 
         if (url.toLowerCase().endsWith('.png') || url.toLowerCase().endsWith('.jpg')) {
-          url = "https://resizer.greyh.at/250x/" + url
+          url = "https://resizer.greyh.at/250x,webp/" + url
         }
 
         fullData.push({
@@ -216,7 +216,7 @@ function App() {
         borderRadius: 15,
       }}>
         {!item.url.includes(".mp4") ? (
-          <img alt={item.name} src={item.url} width="250px" style={{
+          <img alt={item.name} src={item.url} width="250px" loading="lazy" style={{
             borderTopRightRadius: 15,
             borderTopLeftRadius: 15,
           }} />) : (
@@ -251,7 +251,7 @@ function App() {
       let url = metadata.image.replace("ipfs://", "https://clementinesnightmare.mypinata.cloud/ipfs/")
 
       if (url.toLowerCase().endsWith('.png') || url.toLowerCase().endsWith('.jpg')) {
-        url = "https://resizer.greyh.at/250x/" + url
+        url = "https://resizer.greyh.at/250x,webp/" + url
       }
 
       fullData.push({
@@ -270,7 +270,7 @@ function App() {
         borderRadius: 15,
       }}>
         {item.url.includes(".png") ? (
-          <img alt={item.name} src={item.url} width="250px" height="250px" style={{
+          <img alt={item.name} src={item.url} width="250px" height="250px" loading="lazy" style={{
             borderTopRightRadius: 15,
             borderTopLeftRadius: 15,
           }} />) : (
