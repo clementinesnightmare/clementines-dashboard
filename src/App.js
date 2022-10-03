@@ -175,7 +175,7 @@ function App() {
           continue
         }
 
-        if (metadata.name === "pixelatedink.eth" || metadata.name === "clementinesnightmare.eth" || metadata.name === "Spinal Foxes") {
+        if (metadata.name === "Witch #253" || metadata.name === "pixelatedink.eth" || metadata.name === "clementinesnightmare.eth" || metadata.name === "Spinal Foxes") {
           continue
         }
 
